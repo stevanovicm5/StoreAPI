@@ -1,6 +1,9 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using BusinessLogicLayer.Interfaces;
+using BusinessLogicLayer.Services;
 
-app.MapGet("/", () => "Hello World!");
+var builder = WebApplication.CreateBuilder(args);
+
+
+var app = builder.Build();
 
 app.Run();
