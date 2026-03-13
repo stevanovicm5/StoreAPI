@@ -25,6 +25,14 @@ public class UpdateProductValidator : AbstractValidator<UpdateProductDto>
         RuleFor(x => x.Stock)
             .GreaterThanOrEqualTo(0).WithMessage("Stock cannot be negative.")
             .When(x => x.Stock is not null);
+
+        RuleFor(x => x)
+         .Must(dto =>
+             !string.IsNullOrWhiteSpace(dto.Name) ||
+             !string.IsNullOrWhiteSpace(dto.Description) ||
+             dto.Price is not null ||
+             dto.Stock is not null)
+         .WithMessage("At least one of Name, Description, Price, or Stock must be provided.");
     }
 
 }

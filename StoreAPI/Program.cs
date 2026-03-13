@@ -10,12 +10,22 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", ".env");
-Env.Load(envPath);
+builder.Services.AddControllers();
 
-var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProductValidator>();
 
-builder.Services.AddDbContext<AppDbContext>(options => 
+
+if (builder.Environment.IsDevelopment())
+{
+    var envPath = Path.Combine(builder.Environment.ContentRootPath, "..", ".env");
+    Env.Load(envPath);
+}
+
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+    ?? throw new InvalidOperationException("DB_CONNECTION_STRING is not set. Check your .env file.");
+
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -23,9 +33,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddControllers();
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateProductValidator>();
+
 
 var app = builder.Build();
 
