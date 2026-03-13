@@ -1,6 +1,38 @@
 @StoreAPI_HostAddress = http://localhost:5034
 
-GET {{StoreAPI_HostAddress}}/weatherforecast/
+### Get all products
+GET {{StoreAPI_HostAddress}}/api/product
 Accept: application/json
 
-###
+
+### Get a product by ID
+GET {{StoreAPI_HostAddress}}/api/product/9
+Accept: application/json
+
+
+### Create a new product
+POST {{StoreAPI_HostAddress}}/api/product
+Content-Type: application/json
+
+{
+  "name": "Sample product",
+  "description": "A sample product for testing",
+  "price": 19.99,
+  "stock": 50
+}
+
+
+### Update an existing product
+PATCH {{StoreAPI_HostAddress}}/api/product/15
+Content-Type: application/json
+
+{
+  "name": "Updated product name",
+  "description": "Updated description",
+  "price": 24.99,
+  "stock": 30
+}
+
+
+### Delete a product
+DELETE {{StoreAPI_HostAddress}}/api/product/15
