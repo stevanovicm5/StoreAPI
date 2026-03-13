@@ -35,7 +35,7 @@ namespace StoreAPI.Controllers
         public async Task<IActionResult> Create(CreateProductDto productDto)
         {
             var product = await _productService.CreateAsync(productDto);
-            return CreatedAtAction(nameof(GetAll), new { id = product.Id }, product);
+            return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
         }
 
         [HttpDelete("{id}")]
