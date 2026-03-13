@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "DVkQ8/Fps4w=",
+  "dgSpecHash": "5tPgJ4qTQ+M=",
   "success": true,
   "projectFilePath": "/home/milan/Desktop/StoreAPI/StoreAPI/StoreAPI.csproj",
   "expectedPackageFiles": [
+    "/home/milan/.nuget/packages/fluentvalidation/11.11.0/fluentvalidation.11.11.0.nupkg.sha512",
+    "/home/milan/.nuget/packages/fluentvalidation.aspnetcore/11.3.1/fluentvalidation.aspnetcore.11.3.1.nupkg.sha512",
+    "/home/milan/.nuget/packages/fluentvalidation.dependencyinjectionextensions/11.11.0/fluentvalidation.dependencyinjectionextensions.11.11.0.nupkg.sha512",
     "/home/milan/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/milan/.nuget/packages/microsoft.aspnetcore.openapi/10.0.3/microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",
     "/home/milan/.nuget/packages/microsoft.build.framework/18.0.2/microsoft.build.framework.18.0.2.nupkg.sha512",

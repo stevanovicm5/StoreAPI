@@ -1,6 +1,9 @@
 using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.Services;
+using BusinessLogicLayer.Validators;
 using DataAccessLayer.Context;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +17,8 @@ builder.Services.AddScoped<IProductService, ProductService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProductValidator>();
 
 var app = builder.Build();
 
