@@ -85,8 +85,8 @@ public class ProductService : IProductService
         var product = await _context.Products.FindAsync(id);
         if (product is null) return null;
 
-        if (dto.Name is not null) product.Name = dto.Name;
-        if (dto.Description is not null) product.Description = dto.Description;
+        if (!string.IsNullOrWhiteSpace(dto.Name)) product.Name = dto.Name;
+        if (!string.IsNullOrWhiteSpace(dto.Description)) product.Description = dto.Description;
         if (dto.Price is not null) product.Price = dto.Price.Value;
         if (dto.Stock is not null) product.Stock = dto.Stock.Value;
 

@@ -23,11 +23,36 @@ namespace StoreAPI.Controllers
             return Ok(products);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var product = await _productService.GetByIdAsync(id);
+            if (product is null) return NotFound();
+            return Ok(product);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductDto productDto)
         {
             var product = await _productService.CreateAsync(productDto);
             return CreatedAtAction(nameof(GetAll), new { id = product.Id }, product);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _productService.DeleteAsync(id);
+            if (!result) return NotFound();
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Update(int id, UpdateProductDto productDto)
+        {
+            var product = await _productService.UpdateAsync(id, productDto);
+            if (product is null) return NotFound();
+            return Ok(product);
+        }
+        
     }
 }
