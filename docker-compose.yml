@@ -9,7 +9,8 @@ services:
     environment:
       - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:16
@@ -21,6 +22,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
   pgadmin:
     image: dpage/pgadmin4
@@ -30,7 +37,8 @@ services:
     ports:
       - "5050:80"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:
