@@ -1,6 +1,5 @@
 using BusinessLogicLayer.DTOs.Product;
 using BusinessLogicLayer.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StoreAPI.Controllers

@@ -1,4 +1,3 @@
-using System;
 using BusinessLogicLayer.DTOs.Product;
 using FluentValidation;
 
@@ -9,13 +8,17 @@ public class UpdateProductValidator : AbstractValidator<UpdateProductDto>
     public UpdateProductValidator()
     {
         RuleFor(x => x.Name)
-            .MinimumLength(2).WithMessage("Name must be at least 2 characters.")
-            .MaximumLength(50).WithMessage("Name cannot exceed 50 characters.")
+            .Must(name => name is not null && name == name.Trim()).WithMessage("Name cannot start or end with spaces.")
+            .Must(name => name is not null && !name.Contains("  ")).WithMessage("Name cannot contain multiple consecutive spaces.")
+            .Must(name => name is not null && name.Trim().Length >= 2).WithMessage("Name must be at least 2 characters.")
+            .Must(name => name is not null && name.Trim().Length <= 50).WithMessage("Name cannot exceed 50 characters.")
             .When(x => !string.IsNullOrWhiteSpace(x.Name));
 
         RuleFor(x => x.Description)
-            .MinimumLength(2).WithMessage("Description must be at least 2 characters.")
-            .MaximumLength(200).WithMessage("Description cannot exceed 200 characters.")
+            .Must(description => description is not null && description == description.Trim()).WithMessage("Description cannot start or end with spaces.")
+            .Must(description => description is not null && !description.Contains("  ")).WithMessage("Description cannot contain multiple consecutive spaces.")
+            .Must(description => description is not null && description.Trim().Length >= 2).WithMessage("Description must be at least 2 characters.")
+            .Must(description => description is not null && description.Trim().Length <= 200).WithMessage("Description cannot exceed 200 characters.")
             .When(x => !string.IsNullOrWhiteSpace(x.Description));
 
         RuleFor(x => x.Price)
