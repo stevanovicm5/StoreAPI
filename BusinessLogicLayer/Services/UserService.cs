@@ -60,7 +60,7 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(Guid id)
     {
         var user = await _context.Users.FindAsync(id);
         if (user is null) return false;
@@ -82,7 +82,7 @@ public class UserService : IUserService
         }).ToListAsync();
     }
 
-    public async Task<UserDto?> GetByIdAsync(int id)
+    public async Task<UserDto?> GetByIdAsync(Guid id)
     {
         var user = await _context.Users.FindAsync(id);
         if (user is null) return null;
@@ -97,7 +97,7 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<UserDto?> UpdateAsync(int id, UpdateUserDto dto)
+    public async Task<UserDto?> UpdateAsync(Guid id, UpdateUserDto dto)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (user is null) return null;
