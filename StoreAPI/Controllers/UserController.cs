@@ -24,7 +24,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(Guid id)
         {
             var user = await _userService.GetByIdAsync(id);
             if (user is null) return NotFound();
@@ -46,7 +46,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _userService.DeleteAsync(id);
             if (!result) return NotFound();
@@ -54,7 +54,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateUserDto updateUserDto)
+        public async Task<IActionResult> Update(Guid id, UpdateUserDto updateUserDto)
         {
             try
             {

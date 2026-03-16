@@ -41,7 +41,7 @@ public class ProductService : IProductService
         _context = context;
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(Guid id)
     {
         var product = await _context.Products.FindAsync(id);
         if (product is null) return false;
@@ -64,7 +64,7 @@ public class ProductService : IProductService
         }).ToListAsync();
     }
 
-    public async Task<ProductDto?> GetByIdAsync(int id)
+    public async Task<ProductDto?> GetByIdAsync(Guid id)
     {
         var product = await _context.Products.FindAsync(id);
         if (product is null) return null;
@@ -80,7 +80,7 @@ public class ProductService : IProductService
         };
     }
 
-    public async Task<ProductDto?> UpdateAsync(int id, UpdateProductDto dto)
+    public async Task<ProductDto?> UpdateAsync(Guid id, UpdateProductDto dto)
     {
         var product = await _context.Products.FindAsync(id);
         if (product is null) return null;
