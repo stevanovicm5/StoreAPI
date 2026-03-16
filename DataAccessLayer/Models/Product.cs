@@ -1,4 +1,3 @@
-using DataAccessLayer.Exceptions;
 
 namespace DataAccessLayer.Models
 {

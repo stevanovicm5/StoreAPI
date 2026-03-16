@@ -1,4 +1,3 @@
-using System;
 using BusinessLogicLayer.DTOs.Product;
 
 namespace BusinessLogicLayer.Interfaces;

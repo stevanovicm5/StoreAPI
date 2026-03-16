@@ -14,10 +14,6 @@ builder.Services.AddControllers();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProductValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<UpdateProductValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserValidator>();
-
 
 if (builder.Environment.IsDevelopment())
 {
