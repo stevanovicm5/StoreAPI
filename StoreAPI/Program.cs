@@ -14,6 +14,9 @@ builder.Services.AddControllers();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProductValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateProductValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserValidator>();
 
 
 if (builder.Environment.IsDevelopment())
@@ -29,7 +32,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<IProductService, ProductService>();
-
+builder.Services.AddScoped<IUserService, UserService>();
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

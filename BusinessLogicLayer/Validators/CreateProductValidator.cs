@@ -14,10 +14,16 @@ public class CreateProductValidator : AbstractValidator<CreateProductDto>
 
         RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required.")
+                .Must(name => name == name.Trim()).WithMessage("Name cannot start or end with spaces.")
+                .Must(name => !name.Contains("  ")).WithMessage("Name cannot contain multiple consecutive spaces.")
+                .Must(name => name.Trim().Length >= 2).WithMessage("Name must be at least 2 characters.")
                 .MaximumLength(MaxNameLength).WithMessage($"Name cannot exceed {MaxNameLength} characters.");
 
         RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Description is required.")
+                .Must(description => description == description.Trim()).WithMessage("Description cannot start or end with spaces.")
+                .Must(description => !description.Contains("  ")).WithMessage("Description cannot contain multiple consecutive spaces.")
+                .Must(description => description.Trim().Length >= 2).WithMessage("Description must be at least 2 characters.")
                 .MaximumLength(200).WithMessage("Description cannot exceed 200 characters.");
 
         RuleFor(x => x.Price)

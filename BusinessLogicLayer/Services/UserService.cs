@@ -23,8 +23,8 @@ public class UserService : IUserService
     {
         var user = new User
         {
-            Name = dto.Name,
-            Email = dto.Email,
+            Name = dto.Name.Trim(),
+            Email = dto.Email.Trim(),
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
             CreatedAt = DateTime.UtcNow
         };
@@ -82,8 +82,8 @@ public class UserService : IUserService
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (user is null) return null;
 
-        if (string.IsNullOrWhiteSpace(dto.Name)) user.Name = dto.Name;
-        if (!string.IsNullOrWhiteSpace(dto.Email)) user.Email = dto.Email;
+        if (!string.IsNullOrWhiteSpace(dto.Name)) user.Name = dto.Name.Trim();
+        if (!string.IsNullOrWhiteSpace(dto.Email)) user.Email = dto.Email.Trim();
 
         await _context.SaveChangesAsync();
 
