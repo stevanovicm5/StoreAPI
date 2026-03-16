@@ -53,6 +53,5 @@ namespace StoreAPI.Controllers
             if (product is null) return NotFound();
             return Ok(product);
         }
-
     }
 }
