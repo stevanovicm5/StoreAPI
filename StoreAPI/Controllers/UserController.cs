@@ -1,6 +1,6 @@
 using BusinessLogicLayer.DTOs.User;
 using BusinessLogicLayer.Interfaces;
-using Microsoft.AspNetCore.Http;
+using DataAccessLayer.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StoreAPI.Controllers
@@ -34,8 +34,15 @@ namespace StoreAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserDto userDto)
         {
-            var user = await _userService.CreateAsync(userDto);
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+            try
+            {
+                var user = await _userService.CreateAsync(userDto);
+                return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
@@ -49,9 +56,16 @@ namespace StoreAPI.Controllers
         [HttpPatch("{id}")]
         public async Task<IActionResult> Update(int id, UpdateUserDto updateUserDto)
         {
-            var user = await _userService.UpdateAsync(id, updateUserDto);
-            if (user is null) return NotFound();
-            return Ok(user);
+            try
+            {
+                var user = await _userService.UpdateAsync(id, updateUserDto);
+                if (user is null) return NotFound();
+                return Ok(user);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
     }
 }

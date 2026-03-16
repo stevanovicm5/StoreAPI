@@ -15,6 +15,7 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserDto>
             .When(x => !string.IsNullOrWhiteSpace(x.Name));
 
         RuleFor(x => x.Email)
+            .Must(email => email is not null && email == email.Trim()).WithMessage("Email cannot start or end with spaces.")
             .EmailAddress().WithMessage("Invalid email format.")
             .When(x => !string.IsNullOrWhiteSpace(x.Email));
 
@@ -22,6 +23,6 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserDto>
      .Must(dto =>
          !string.IsNullOrWhiteSpace(dto.Name) ||
          !string.IsNullOrWhiteSpace(dto.Email))
-     .WithMessage("At least one of Name, Email must be provided.");
+     .WithMessage("At least one of Name or Email must be provided.");
     }
 }

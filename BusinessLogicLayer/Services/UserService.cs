@@ -1,8 +1,8 @@
-using System;
-using System.Data.Common;
 using BusinessLogicLayer.DTOs.User;
 using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Context;
+using DataAccessLayer.Enumerations;
+using DataAccessLayer.Exceptions;
 using DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,12 +21,21 @@ public class UserService : IUserService
 
     public async Task<UserDto> CreateAsync(CreateUserDto dto)
     {
+        var normalizedEmail = dto.Email.Trim().ToLowerInvariant();
+        var emailExists = await _context.Users
+            .AnyAsync(u => u.Email.ToLower() == normalizedEmail);
+
+        if (emailExists)
+        {
+            throw new InvalidOperationException("Email is already in use.");
+        }
         var user = new User
         {
             Name = dto.Name.Trim(),
-            Email = dto.Email.Trim(),
+            Email = normalizedEmail,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            Role = Role.MEMBER
         };
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -83,7 +92,19 @@ public class UserService : IUserService
         if (user is null) return null;
 
         if (!string.IsNullOrWhiteSpace(dto.Name)) user.Name = dto.Name.Trim();
-        if (!string.IsNullOrWhiteSpace(dto.Email)) user.Email = dto.Email.Trim();
+        if (!string.IsNullOrWhiteSpace(dto.Email))
+        {
+            var normalizedEmail = dto.Email.Trim().ToLowerInvariant();
+            var emailExists = await _context.Users
+                .AnyAsync(u => u.Id != id && u.Email.ToLower() == normalizedEmail);
+
+            if (emailExists)
+            {
+                throw new InvalidOperationException("Email is already in use.");
+            }
+
+            user.Email = normalizedEmail;
+        }
 
         await _context.SaveChangesAsync();
 
