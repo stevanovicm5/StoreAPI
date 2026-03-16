@@ -16,6 +16,7 @@ public class CreateUserValidator : AbstractValidator<CreateUserDto>
             .Must(name => name != null && name.Trim().Length <= 100).WithMessage("Name cannot exceed 100 characters.");
 
         RuleFor(x => x.Email)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Email is required.")
             .Must(email => email == email.Trim()).WithMessage("Email cannot start or end with spaces.")
             .Must(email => email == email.ToLowerInvariant()).WithMessage("Email must be in lowercase.")

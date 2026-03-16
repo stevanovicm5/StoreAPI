@@ -1,4 +1,4 @@
-@StoreAPI_HostAddress = http://localhost:5034
+@StoreAPI_HostAddress = http://localhost:8080
 
 ### Get all products
 GET {{StoreAPI_HostAddress}}/api/product
@@ -36,3 +36,74 @@ Content-Type: application/json
 
 ### Delete a product
 DELETE {{StoreAPI_HostAddress}}/api/product/15
+
+
+### =========================
+### User endpoint tests
+### =========================
+
+### 1) Create first user (expected: 201)
+POST {{StoreAPI_HostAddress}}/api/user
+Content-Type: application/json
+
+{
+  "name": "Milan One",
+  "email": "milan.one@example.com",
+  "password": "secret123"
+}
+
+
+### 2) Create second user (expected: 201)
+POST {{StoreAPI_HostAddress}}/api/user
+Content-Type: application/json
+
+{
+  "name": "Milan Two",
+  "email": "milan.two@example.com",
+  "password": "secret123"
+}
+
+
+### 3) Duplicate email on create (expected: 409)
+POST {{StoreAPI_HostAddress}}/api/user
+Content-Type: application/json
+
+{
+  "name": "Duplicate Email",
+  "email": "milan.one@example.com",
+  "password": "secret123"
+}
+
+
+### 4) Get all users (expected: 200)
+GET {{StoreAPI_HostAddress}}/api/user
+Accept: application/json
+
+
+### 5) Update user name only (expected: 200)
+### Adjust ID to an existing user ID if needed.
+PATCH {{StoreAPI_HostAddress}}/api/user/46
+Content-Type: application/json
+
+{
+  "name": "Milan Updated"
+}
+
+
+### 6) Update user with existing email from another user (expected: 409)
+### Adjust ID to an existing user different from the owner of milan.two@example.com.
+PATCH {{StoreAPI_HostAddress}}/api/user/46
+Content-Type: application/json
+
+{
+  "email": "milan.two@example.com"
+}
+
+
+### 7) Update with invalid spaced name (expected: 400 from FluentValidation)
+PATCH {{StoreAPI_HostAddress}}/api/user/46
+Content-Type: application/json
+
+{
+  "name": "     d         "
+}

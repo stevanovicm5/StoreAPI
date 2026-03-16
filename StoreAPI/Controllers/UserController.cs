@@ -39,7 +39,7 @@ namespace StoreAPI.Controllers
                 var user = await _userService.CreateAsync(userDto);
                 return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidFieldValueException ex)
             {
                 return Conflict(new { message = ex.Message });
             }
@@ -62,7 +62,7 @@ namespace StoreAPI.Controllers
                 if (user is null) return NotFound();
                 return Ok(user);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidFieldValueException ex)
             {
                 return Conflict(new { message = ex.Message });
             }

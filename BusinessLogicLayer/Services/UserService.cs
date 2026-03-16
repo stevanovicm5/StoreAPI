@@ -5,6 +5,7 @@ using DataAccessLayer.Enumerations;
 using DataAccessLayer.Exceptions;
 using DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 
 namespace BusinessLogicLayer.Services;
@@ -23,11 +24,11 @@ public class UserService : IUserService
     {
         var normalizedEmail = dto.Email.Trim().ToLowerInvariant();
         var emailExists = await _context.Users
-            .AnyAsync(u => u.Email.ToLower() == normalizedEmail);
+            .AnyAsync(u => u.Email == normalizedEmail);
 
         if (emailExists)
         {
-            throw new InvalidOperationException("Email is already in use.");
+            throw new InvalidFieldValueException("Email is already in use.");
         }
         var user = new User
         {
@@ -38,7 +39,17 @@ public class UserService : IUserService
             Role = Role.MEMBER
         };
         _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex) when (
+            ex.InnerException is PostgresException postgresException &&
+            postgresException.SqlState == PostgresErrorCodes.UniqueViolation)
+        {
+            throw new InvalidFieldValueException("Email is already in use.", ex);
+        }
+
         return new UserDto
         {
             Id = user.Id,
@@ -96,17 +107,26 @@ public class UserService : IUserService
         {
             var normalizedEmail = dto.Email.Trim().ToLowerInvariant();
             var emailExists = await _context.Users
-                .AnyAsync(u => u.Id != id && u.Email.ToLower() == normalizedEmail);
+                .AnyAsync(u => u.Id != id && u.Email == normalizedEmail);
 
             if (emailExists)
             {
-                throw new InvalidOperationException("Email is already in use.");
+                throw new InvalidFieldValueException("Email is already in use.");
             }
 
             user.Email = normalizedEmail;
         }
 
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex) when (
+            ex.InnerException is PostgresException postgresException &&
+            postgresException.SqlState == PostgresErrorCodes.UniqueViolation)
+        {
+            throw new InvalidFieldValueException("Email is already in use.", ex);
+        }
 
         return new UserDto
         {
