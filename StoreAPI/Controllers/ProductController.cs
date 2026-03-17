@@ -1,6 +1,6 @@
 using BusinessLogicLayer.DTOs.Product;
 using BusinessLogicLayer.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StoreAPI.Controllers
@@ -17,6 +17,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var products = await _productService.GetAllAsync();
@@ -24,7 +25,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(Guid id)
         {
             var product = await _productService.GetByIdAsync(id);
             if (product is null) return NotFound();
@@ -39,7 +40,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _productService.DeleteAsync(id);
             if (!result) return NotFound();
@@ -47,12 +48,11 @@ namespace StoreAPI.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateProductDto productDto)
+        public async Task<IActionResult> Update(Guid id, UpdateProductDto productDto)
         {
             var product = await _productService.UpdateAsync(id, productDto);
             if (product is null) return NotFound();
             return Ok(product);
         }
-
     }
 }

@@ -5,25 +5,24 @@
 namespace DataAccessLayer.Migrations
 {
     /// <inheritdoc />
-    public partial class AddStockToProduct : Migration
+    public partial class RenameTokenToTokenHash : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Stock",
-                table: "Products",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0);
+            migrationBuilder.RenameColumn(
+                name: "Token",
+                table: "RefreshTokens",
+                newName: "TokenHash");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Stock",
-                table: "Products");
+            migrationBuilder.RenameColumn(
+                name: "TokenHash",
+                table: "RefreshTokens",
+                newName: "Token");
         }
     }
 }
