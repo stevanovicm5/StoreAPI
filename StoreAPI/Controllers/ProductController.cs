@@ -1,5 +1,6 @@
 using BusinessLogicLayer.DTOs.Product;
 using BusinessLogicLayer.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StoreAPI.Controllers
@@ -16,6 +17,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var products = await _productService.GetAllAsync();

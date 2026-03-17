@@ -10,5 +10,7 @@ namespace DataAccessLayer.Models
         public string PasswordHash { get; set; } = string.Empty;
         public Role Role { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+
     }
 }
