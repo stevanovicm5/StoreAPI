@@ -120,7 +120,7 @@ public class AuthService : IAuthService
 
         var user = new User
         {
-            Name = dto.Name,
+            Name = dto.Name.Trim(),
             Email = normalizedEmail,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
             Role = DataAccessLayer.Enumerations.Role.MEMBER,

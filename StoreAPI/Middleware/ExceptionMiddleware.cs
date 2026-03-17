@@ -1,6 +1,4 @@
-
 using DataAccessLayer.Exceptions;
-using Microsoft.Extensions.Logging;
 
 namespace StoreAPI.Middleware;
 
@@ -21,29 +19,42 @@ public class ExceptionMiddleware
         {
             await _next(context);
         }
-        catch (AppException ex)
-        {
-            _logger.LogWarning(ex, "A handled application exception occurred.");
-            context.Response.StatusCode = ex.StatusCode;
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsJsonAsync(new
-            {
-                message = ex.Message,
-                statusCode = ex.StatusCode
-            });
-        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unhandled exception occurred while processing the request.");
-            context.Response.StatusCode = 500;
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsJsonAsync(new
+            if (context.Response.HasStarted)
             {
-                message = "An unexpected error occurred.",
-                statusCode = 500
-            });
-        }
+                _logger.LogError(ex, "Exception occurred after response has started.");
+                throw;
+            }
 
+            await HandleExceptionAsync(context, ex);
+        }
     }
 
+    private async Task HandleExceptionAsync(HttpContext context, Exception ex)
+    {
+        context.Response.ContentType = "application/json";
+
+        switch (ex)
+        {
+            case AppException appEx:
+                context.Response.StatusCode = appEx.StatusCode;
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    message = appEx.Message,
+                    statusCode = appEx.StatusCode
+                });
+                break;
+
+            default:
+                _logger.LogError(ex, "An unexpected error occurred.");
+                context.Response.StatusCode = 500;
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    message = "An unexpected error occurred.",
+                    statusCode = 500
+                });
+                break;
+        }
+    }
 }
