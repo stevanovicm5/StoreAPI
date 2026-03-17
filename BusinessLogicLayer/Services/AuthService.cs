@@ -69,21 +69,33 @@ public class AuthService : IAuthService
     public async Task<AuthResponseDto> RefreshTokenAsync(string refreshToken)
     {
         var tokenHash = HashToken(refreshToken);
+        var now = DateTime.UtcNow;
+
+        await using var transaction = await _context.Database.BeginTransactionAsync();
 
         var storedToken = await _context.RefreshTokens
             .Include(rt => rt.User)
             .FirstOrDefaultAsync(rt => rt.TokenHash == tokenHash);
 
-        if (storedToken is null || storedToken.IsRevoked || storedToken.ExpiresAt < DateTime.UtcNow)
+        if (storedToken is null || storedToken.ExpiresAt < now)
             throw new UnauthorizedException("Invalid or expired refresh token.");
 
-        storedToken.IsRevoked = true;
-        await _context.SaveChangesAsync();
+        var rowsUpdated = await _context.Database.ExecuteSqlRawAsync(
+            "UPDATE \"RefreshTokens\" " +
+            "SET \"IsRevoked\" = TRUE " +
+            "WHERE \"TokenHash\" = {0} AND \"IsRevoked\" = FALSE AND \"ExpiresAt\" > {1}",
+            tokenHash,
+            now);
+
+        if (rowsUpdated == 0)
+            throw new UnauthorizedException("Invalid or expired refresh token.");
 
         var newAccessToken = GenerateAccessToken(storedToken.User);
         var newRefreshToken = GenerateRefreshToken();
 
         await SaveRefreshTokenAsync(storedToken.User.Id, newRefreshToken);
+
+        await transaction.CommitAsync();
 
         return new AuthResponseDto
         {
