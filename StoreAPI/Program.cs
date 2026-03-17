@@ -14,9 +14,16 @@ using StoreAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (builder.Environment.IsDevelopment())
+{
+    var envPath = Path.Combine(builder.Environment.ContentRootPath, "..", ".env");
+    Env.Load(envPath);
+    builder.Configuration.AddEnvironmentVariables();
+}
+
 builder.Services.AddControllers();
 
-var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? throw new InvalidOperationException("JWT_SECRET is not set.");
+var jwtSecret = builder.Configuration["JWT_SECRET"] ?? throw new InvalidOperationException("JWT_SECRET is not set.");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -31,8 +38,8 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "StoreAPI",
-        ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "StoreAPIClient",
+        ValidIssuer = builder.Configuration["JWT_ISSUER"] ?? "StoreAPI",
+        ValidAudience = builder.Configuration["JWT_AUDIENCE"] ?? "StoreAPIClient",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
         ClockSkew = TimeSpan.FromSeconds(30)
     };
@@ -43,15 +50,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProductValidator>();
 
-if (builder.Environment.IsDevelopment())
-{
-    var envPath = Path.Combine(builder.Environment.ContentRootPath, "..", ".env");
-    Env.Load(envPath);
-}
-
-var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+var connectionString = builder.Configuration["DB_CONNECTION_STRING"]
     ?? throw new InvalidOperationException("DB_CONNECTION_STRING is not set. Check your .env file.");
-
+    
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 

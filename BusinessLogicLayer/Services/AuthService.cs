@@ -27,7 +27,8 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+        var normalizedEmail = dto.Email?.Trim().ToLowerInvariant();
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == normalizedEmail);
 
         if (user is null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             throw new UnauthorizedException("Invalid email or password.");
@@ -100,14 +101,15 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
     {
-        var emailExists = await _context.Users.AnyAsync(u => u.Email == dto.Email);
+        var normalizedEmail = dto.Email.Trim().ToLowerInvariant();
+        var emailExists = await _context.Users.AnyAsync(u => u.Email == normalizedEmail);
         if (emailExists)
             throw new EmailAlreadyExistsException(dto.Email);
 
         var user = new User
         {
             Name = dto.Name,
-            Email = dto.Email.ToLower(),
+            Email = normalizedEmail,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
             Role = DataAccessLayer.Enumerations.Role.MEMBER,
             CreatedAt = DateTime.UtcNow
@@ -141,7 +143,17 @@ public class AuthService : IAuthService
         var secret = _configuration["JWT_SECRET"] ?? throw new InvalidOperationException("JWT_SECRET is not set.");
         var issuer = _configuration["JWT_ISSUER"] ?? "StoreAPI";
         var audience = _configuration["JWT_AUDIENCE"] ?? "StoreAPIClient";
-        var expiryMinutes = int.Parse(_configuration["JWT_EXPIRY_MINUTES"] ?? "15");
+        const int defaultExpiryMinutes = 15;
+        var expiryConfig = _configuration["JWT_EXPIRY_MINUTES"];
+        int expiryMinutes;
+        if (string.IsNullOrWhiteSpace(expiryConfig))
+        {
+            expiryMinutes = defaultExpiryMinutes;
+        }
+        else if (!int.TryParse(expiryConfig, out expiryMinutes) || expiryMinutes <= 0)
+        {
+            throw new InvalidOperationException("JWT_EXPIRY_MINUTES must be a positive integer.");
+        }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
