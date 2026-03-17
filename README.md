@@ -1,6 +1,6 @@
 # StoreAPI
 
-A RESTful Web API built with ASP.NET Core using N-Layer Architecture, featuring JWT authentication, product management, and full Docker support.
+A RESTful Web API built with ASP.NET Core using N-Layer Architecture, featuring JWT authentication, refresh token rotation, HTTP-only cookies, and full Docker support.
 
 ## Tech Stack
 
@@ -9,12 +9,13 @@ A RESTful Web API built with ASP.NET Core using N-Layer Architecture, featuring 
 - Entity Framework Core 10
 - PostgreSQL
 - FluentValidation
-- JWT + Refresh Tokens
+- JWT + Refresh Token Rotation
 - HTTP-only Cookies
+- BCrypt password hashing
 
 **Frontend**
-- Angular
-- Angular Material / PrimeNG
+- Angular *(coming soon)*
+- Angular Material / PrimeNG *(coming soon)*
 
 **DevOps**
 - Docker & Docker Compose
@@ -26,17 +27,22 @@ A RESTful Web API built with ASP.NET Core using N-Layer Architecture, featuring 
 
 ```
 StoreAPI/
-├── DataAccessLayer/       # EF Core models, enums, DbContext
-│   ├── Models/
-│   ├── Enums/
-│   └── Context/
-├── BusinessLogicLayer/    # Business logic, DTOs, validators
+├── DataAccessLayer/          # EF Core models, enums, DbContext, exceptions
+│   ├── Models/               # User, Product, RefreshToken
+│   ├── Enums/                # Role
+│   ├── Context/              # AppDbContext
+│   └── Exceptions/           # AppException, EmailAlreadyExistsException, UnauthorizedException
+├── BusinessLogicLayer/       # Business logic, DTOs, services, validators
 │   ├── DTOs/
-│   ├── Interfaces/
-│   ├── Services/
-│   └── Validators/
-└── StoreAPI/              # Controllers, middleware, Program.cs
-    └── Controllers/
+│   │   ├── Auth/             # RegisterDto, LoginDto, AuthResponseDto, UserInfoDto
+│   │   ├── User/             # UserDto, CreateUserDto, UpdateUserDto
+│   │   └── Product/          # ProductDto, CreateProductDto, UpdateProductDto
+│   ├── Interfaces/           # IAuthService, IUserService, IProductService
+│   ├── Services/             # AuthService, UserService, ProductService
+│   └── Validators/           # FluentValidation validators
+└── StoreAPI/                 # Controllers, middleware, Program.cs
+    ├── Controllers/          # AuthController, UserController, ProductController
+    └── Middleware/           # ExceptionMiddleware
 ```
 
 ---
@@ -44,13 +50,18 @@ StoreAPI/
 ## Features
 
 - [x] Product CRUD (protected routes)
-- [ ] User registration & login
-- [ ] JWT authentication
-- [ ] Refresh token rotation
-- [ ] HTTP-only cookie auth
+- [x] User CRUD (Admin only)
+- [x] User registration & login
+- [x] JWT authentication
+- [x] Refresh token rotation
+- [x] HTTP-only cookie for refresh token
+- [x] BCrypt password hashing
+- [x] Global exception middleware
+- [x] Custom exceptions with HTTP status codes
+- [x] FluentValidation
+- [x] Docker & Docker Compose
+- [x] pgAdmin via Docker
 - [ ] Angular frontend with reusable components
-- [ ] Docker & Docker Compose setup
-- [ ] pgAdmin via Docker
 
 ---
 
@@ -59,9 +70,7 @@ StoreAPI/
 ### Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/)
-- [PostgreSQL](https://www.postgresql.org/)
-- [Node.js](https://nodejs.org/) (for frontend)
-- [Docker](https://www.docker.com/) (optional)
+- [Docker](https://www.docker.com/)
 
 ### Setup
 
@@ -75,61 +84,76 @@ cd StoreAPI
 2. **Create `.env` file in the root folder**
 
 ```env
-DB_CONNECTION_STRING=Host=localhost;Port=5432;Database=storeapi_db;Username=postgres;Password=your_password
-JWT_SECRET=your_jwt_secret_key
+DB_CONNECTION_STRING=Host=db;Port=5432;Database=storeapi_db;Username=postgres;Password=your_password
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_password
+POSTGRES_DB=storeapi_db
+PGADMIN_DEFAULT_EMAIL=admin@admin.com
+PGADMIN_DEFAULT_PASSWORD=admin
+JWT_SECRET=your_super_secret_key_minimum_32_characters_long
+JWT_ISSUER=StoreAPI
+JWT_AUDIENCE=StoreAPIClient
+JWT_EXPIRY_MINUTES=15
 ```
 
 > `.env` is only used in Development. In production, set environment variables directly or via Docker Compose.
 
-3. **Apply migrations**
+3. **Run with Docker**
 
 ```bash
-dotnet ef database update --project DataAccessLayer --startup-project StoreAPI
+docker compose up --build
 ```
 
-4. **Run the API**
+Migrations are applied automatically on startup.
 
-```bash
-dotnet run --project StoreAPI
-```
-
-API will be available at `http://localhost:5000`.
+API will be available at `http://localhost:8080`.
 
 ---
 
 ## API Endpoints
 
+### Auth
+
+| Method | Endpoint | Auth Required | Description |
+|--------|----------|---------------|-------------|
+| POST | `/api/auth/register` | No | Register new user, returns JWT |
+| POST | `/api/auth/login` | No | Login, returns JWT |
+| POST | `/api/auth/refresh` | Cookie | Refresh access token |
+| POST | `/api/auth/logout` | Cookie | Logout, revokes refresh token |
+
 ### Products
 
 | Method | Endpoint | Auth Required | Description |
 |--------|----------|---------------|-------------|
-| GET | `/api/product` | No | Get all products |
-| GET | `/api/product/{id}` | No | Get product by ID |
-| POST | `/api/product` | Yes | Create product |
-| PATCH | `/api/product/{id}` | Yes | Update product |
-| DELETE | `/api/product/{id}` | Yes | Delete product |
+| GET | `/api/product` | Admin | Get all products |
+| GET | `/api/product/{id}` | Admin | Get product by ID |
+| POST | `/api/product` | Admin | Create product |
+| PATCH | `/api/product/{id}` | Admin | Update product |
+| DELETE | `/api/product/{id}` | Admin | Delete product |
 
-### Auth *(coming soon)*
+### Users
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register new user |
-| POST | `/api/auth/login` | Login, returns JWT via HTTP-only cookie |
-| POST | `/api/auth/refresh` | Refresh access token |
-| POST | `/api/auth/logout` | Logout, clears cookie |
+| Method | Endpoint | Auth Required | Description |
+|--------|----------|---------------|-------------|
+| GET | `/api/user` | Admin | Get all users |
+| GET | `/api/user/{id}` | Admin | Get user by ID |
+| POST | `/api/user` | Admin | Create user |
+| PATCH | `/api/user/{id}` | Admin | Update user |
+| DELETE | `/api/user/{id}` | Admin | Delete user |
 
 ---
 
-## Docker *(coming soon)*
+## Docker Services
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
-Services:
-- `api` – ASP.NET Core Web API
-- `db` – PostgreSQL
-- `pgadmin` – pgAdmin on `http://localhost:5050`
+| Service | Description | URL |
+|---------|-------------|-----|
+| `api` | ASP.NET Core Web API | `http://localhost:8080` |
+| `db` | PostgreSQL | `localhost:5433` |
+| `pgadmin` | pgAdmin UI | `http://localhost:5050` |
 
 ---
 
@@ -138,7 +162,15 @@ Services:
 | Variable | Description |
 |----------|-------------|
 | `DB_CONNECTION_STRING` | PostgreSQL connection string |
-| `JWT_SECRET` | Secret key for JWT signing |
+| `POSTGRES_USER` | PostgreSQL username |
+| `POSTGRES_PASSWORD` | PostgreSQL password |
+| `POSTGRES_DB` | PostgreSQL database name |
+| `PGADMIN_DEFAULT_EMAIL` | pgAdmin login email |
+| `PGADMIN_DEFAULT_PASSWORD` | pgAdmin login password |
+| `JWT_SECRET` | Secret key for JWT signing (min 32 chars) |
+| `JWT_ISSUER` | JWT issuer |
+| `JWT_AUDIENCE` | JWT audience |
+| `JWT_EXPIRY_MINUTES` | JWT expiry in minutes (default: 15) |
 
 ---
 
