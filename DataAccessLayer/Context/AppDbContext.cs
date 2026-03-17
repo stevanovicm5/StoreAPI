@@ -38,6 +38,7 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(rt => rt.Id);
             entity.Property(rt => rt.TokenHash).IsRequired();
+            entity.HasIndex(rt => rt.TokenHash).IsUnique();
             entity.Property(rt => rt.ExpiresAt).IsRequired();
             entity.Property(rt => rt.IsRevoked).IsRequired();
             entity.HasOne(rt => rt.User)
