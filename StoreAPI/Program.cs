@@ -7,12 +7,18 @@ using DotNetEnv;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using StoreAPI.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
 
 if (builder.Environment.IsDevelopment())
 {
@@ -52,7 +58,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateProductValidator>();
 
 var connectionString = builder.Configuration["DB_CONNECTION_STRING"]
     ?? throw new InvalidOperationException("DB_CONNECTION_STRING is not set. Check your .env file.");
-    
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
@@ -80,6 +86,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseForwardedHeaders();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();

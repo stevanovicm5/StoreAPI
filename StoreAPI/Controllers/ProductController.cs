@@ -7,6 +7,7 @@ namespace StoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "ADMIN")]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -17,7 +18,6 @@ namespace StoreAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var products = await _productService.GetAllAsync();

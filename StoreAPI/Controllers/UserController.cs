@@ -1,12 +1,14 @@
 using BusinessLogicLayer.DTOs.User;
 using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "ADMIN")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
