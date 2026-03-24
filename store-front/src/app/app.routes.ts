@@ -12,6 +12,6 @@ export const routes: Routes = [
     {
         path: 'admin',
         loadComponent: () => import('./features/admin/admin-panel/admin-panel').then(m => m.AdminPanel),
-        canActivate: [authGuard, adminGuard]
+        canActivate: [adminGuard]
     }
 ];

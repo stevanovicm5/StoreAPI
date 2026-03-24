@@ -47,7 +47,8 @@ export class AdminPanel {
 
   async openCreateDialog() {
     const dialogRef = this.dialog.open(ProductForm, {
-      width: '500px',
+      width: '560px',
+      maxWidth: '95vw',
       data: { product: null }
     });
 
@@ -57,7 +58,8 @@ export class AdminPanel {
 
   async openEditDialog(product: Product) {
     const dialogRef = this.dialog.open(ProductForm, {
-      width: '500px',
+      width: '560px',
+      maxWidth: '95vw',
       data: { product }
     });
 

@@ -1,13 +1,24 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { ProductService } from '../../../core/services/product/product.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Product } from '../../../core/models/product.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-product-form',
-  imports: [],
+  imports: [
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './product-form.html',
   styleUrl: './product-form.css',
 })
@@ -23,8 +34,8 @@ export class ProductForm {
 
   form = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(2)]),
-    description: new FormControl('', [Validators.required]),
-    price: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
+    description: new FormControl('', [Validators.required, Validators.minLength(2)]),
+    price: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
     stock: new FormControl<number | null>(null, [Validators.required, Validators.min(0)])
   });
 
@@ -68,5 +79,9 @@ export class ProductForm {
     } finally {
       this.isLoading.set(false);
     }
+  }
+
+  onCancel() {
+    this.dialogRef.close(false);
   }
 }
