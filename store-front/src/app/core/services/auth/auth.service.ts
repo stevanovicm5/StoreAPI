@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthResponse, LoginRequest, RegisterRequest, UserInfo } from '../../models/user.model';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly http = inject(HttpClient); 
-  private readonly apiUrl = 'http://localhost:8080/api/auth';
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/auth`;
 
   private accessToken = signal<string | null>(null);
   currentUser = signal<UserInfo | null>(null);

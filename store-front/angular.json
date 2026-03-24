@@ -29,6 +29,9 @@
           },
           "configurations": {
             "production": {
+              "define": {
+                "__API_BASE_URL__": "\"http://localhost:8080\""
+              },
               "budgets": [
                 {
                   "type": "initial",
@@ -44,6 +47,15 @@
               "outputHashing": "all"
             },
             "development": {
+              "define": {
+                "__API_BASE_URL__": "\"http://localhost:8080\""
+              },
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
