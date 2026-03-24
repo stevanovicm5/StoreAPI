@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ProductService } from '../../../core/services/product.service';
+import { ProductService } from '../../../core/services/product/product.service';
 import { Observable } from 'rxjs';
 import { Product } from '../../../core/models/product.model';
 import { AsyncPipe, NgIf, NgForOf, CurrencyPipe } from '@angular/common';

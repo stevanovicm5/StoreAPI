@@ -1,15 +1,190 @@
-mat-toolbar {
+.topbar {
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+  height: 68px;
+  padding: 0 24px;
 }
 
 .spacer {
   flex: 1 1 auto;
 }
 
-span[routerLink] {
+.brand {
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
+  user-select: none;
+}
+
+.brand-text {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--mat-sys-on-primary);
+}
+
+.nav-links,
+.auth-area {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.auth-area {
+  margin-left: 4px;
+}
+
+.nav-btn,
+.ghost-btn,
+.cta-btn,
+.logout-btn,
+.settings-btn {
+  height: 38px;
+  border-radius: 11px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+}
+
+.nav-btn,
+.ghost-btn {
+  color: var(--mat-sys-on-primary) !important;
+  min-width: 88px;
+  padding: 0 14px;
+}
+
+.settings-btn {
+  color: var(--mat-sys-on-primary) !important;
+  width: 38px;
+  min-width: 38px;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.settings-btn mat-icon {
   font-size: 20px;
-  font-weight: 500;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.settings-btn:hover {
+  background-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+.nav-btn:hover,
+.ghost-btn:hover {
+  background-color: rgba(255, 255, 255, 0.16) !important;
+  color: var(--mat-sys-on-primary) !important;
+}
+
+.cta-btn,
+.logout-btn {
+  padding: 0 14px;
+}
+
+.cta-btn {
+  background-color: var(--mat-sys-on-primary) !important;
+  color: var(--mat-sys-primary) !important;
+}
+
+.logout-btn {
+  background-color: rgba(255, 255, 255, 0.18) !important;
+  color: var(--mat-sys-on-primary) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.26) !important;
+}
+
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.18);
+  color: var(--mat-sys-on-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+  max-width: 200px;
+  box-sizing: border-box;
+}
+
+.user-chip-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  opacity: 0.92;
+}
+
+.user-chip-text {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.is-active {
+  background-color: rgba(255, 255, 255, 0.24) !important;
+  color: var(--mat-sys-on-primary) !important;
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    padding: 0 14px;
+    height: auto;
+    min-height: 68px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .spacer {
+    display: none;
+  }
+
+  .nav-links,
+  .auth-area {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .auth-area {
+    margin-left: 0;
+    gap: 6px;
+    padding-bottom: 8px;
+  }
+
+  .user-chip {
+    max-width: min(260px, 100%);
+  }
+}
+
+@media (max-width: 540px) {
+  .brand-text {
+    font-size: 0.96rem;
+  }
+
+  .nav-btn,
+  .ghost-btn,
+  .cta-btn,
+  .logout-btn {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .settings-btn {
+    flex: 0 0 auto;
+  }
 }

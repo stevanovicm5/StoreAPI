@@ -1,7 +1,38 @@
-<mat-toolbar color="primary">
-  <span routerLink="/">StoreAPI</span>
-  <span class="spacer"></span>
-  <button mat-button routerLink="/">Products</button>
-  <button mat-button routerLink="/login">Login</button>
-  <button mat-button routerLink="/register">Register</button>
+<mat-toolbar color="primary" class="topbar" role="navigation" aria-label="Main navigation">
+  <div class="brand" routerLink="/" aria-label="StoreAPI home">
+    <span class="brand-text">StoreAPI</span>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="nav-links">
+    <button mat-button class="nav-btn" routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">
+      Products
+    </button>
+  </div>
+
+  <div class="auth-area">
+    @if (isAuthenticated()) {
+      @if (authService.currentUser()?.role == 'ADMIN') {
+        <button
+          mat-icon-button
+          class="settings-btn"
+          routerLink="/admin"
+          routerLinkActive="is-active"
+          aria-label="Settings"
+          title="Settings"
+        >
+          <mat-icon>settings</mat-icon>
+        </button>
+      }
+      <span class="user-chip" title="Signed in user">
+        <mat-icon class="user-chip-icon" aria-hidden="true">person</mat-icon>
+        <span class="user-chip-text">{{ currentUser()?.name }}</span>
+      </span>
+      <button mat-flat-button class="logout-btn" (click)="onLogout()">Logout</button>
+    } @else {
+      <button mat-button class="ghost-btn" routerLink="/login" routerLinkActive="is-active">Login</button>
+      <button mat-flat-button class="cta-btn" routerLink="/register" routerLinkActive="is-active">Register</button>
+    }
+  </div>
 </mat-toolbar>

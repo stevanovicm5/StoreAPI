@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { AuthResponse, LoginRequest, RegisterRequest, UserInfo } from '../models/user.model';
+import { AuthResponse, LoginRequest, RegisterRequest, UserInfo } from '../../models/user.model';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({
@@ -41,6 +41,27 @@ export class AuthService {
       return {success: true}
     }catch{
       return{success: false, error: 'failed to register'}
+    }
+  }
+
+  getAccessToken(): string | null {
+  return this.accessToken();
+}
+
+  async refreshToken(): Promise<boolean> {
+    try {
+      const response = await firstValueFrom(
+        this.http.post<AuthResponse>(`${this.apiUrl}/refresh`, {}, {withCredentials: true})
+      );
+
+      this.accessToken.set(response.accessToken);
+      this.currentUser.set(response.user);
+
+      return true;
+    }catch{
+      this.accessToken.set(null);
+      this.currentUser.set(null);
+      return false;
     }
   }
 
