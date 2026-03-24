@@ -11,11 +11,11 @@ export class ProductService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiBaseUrl}/api/product`;
 
-  getAll(): Observable<Product[]>{
+  getAll(): Observable<Product[]> {
     return this.http.get<Product[]>(this.apiUrl);
   }
 
-  getById(id: string): Observable<Product>{
+  getById(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
@@ -23,11 +23,11 @@ export class ProductService {
     return this.http.post<Product>(this.apiUrl, product);
   }
 
-  update(id: string, product: UpdateProductRequest): Observable<Product>{
+  update(id: string, product: UpdateProductRequest): Observable<Product> {
     return this.http.patch<Product>(`${this.apiUrl}/${id}`, product);
   }
 
-  delete(id:string): Observable<void>{
+  delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

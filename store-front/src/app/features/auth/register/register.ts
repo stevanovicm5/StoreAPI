@@ -9,16 +9,18 @@ import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule,
+  imports: [
+    ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    RouterLink],
+    RouterLink,
+  ],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
-export class Register { 
+export class Register {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
@@ -28,7 +30,7 @@ export class Register {
   form = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(2)]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)])
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
   async onSubmit() {
@@ -40,15 +42,14 @@ export class Register {
     const result = await this.authService.register({
       name: this.form.value.name!,
       email: this.form.value.email!,
-      password: this.form.value.password!
+      password: this.form.value.password!,
     });
 
-    if (result.success){
+    if (result.success) {
       this.router.navigate(['/']);
-    }else{
+    } else {
       this.error.set(result.error ?? 'Registration failed.');
     }
     this.isLoading.set(false);
-
   }
 }

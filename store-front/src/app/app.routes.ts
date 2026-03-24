@@ -6,12 +6,13 @@ import { Register } from './features/auth/register/register';
 import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
-    {path: '', component: ProductList, canActivate: [authGuard]},
-    {path: 'login', component: Login},
-    {path: 'register', component: Register},
-    {
-        path: 'admin',
-        loadComponent: () => import('./features/admin/admin-panel/admin-panel').then(m => m.AdminPanel),
-        canActivate: [adminGuard]
-    }
+  { path: '', component: ProductList, canActivate: [authGuard] },
+  { path: 'login', component: Login },
+  { path: 'register', component: Register },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./features/admin/admin-panel/admin-panel').then((m) => m.AdminPanel),
+    canActivate: [adminGuard],
+  },
 ];

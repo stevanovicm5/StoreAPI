@@ -15,10 +15,10 @@ export class Navbar {
   readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  isAuthenticated = this.authService.isAuthenticated
-  currentUser = this.authService.currentUser
+  isAuthenticated = this.authService.isAuthenticated;
+  currentUser = this.authService.currentUser;
 
-  async onLogout(){
+  async onLogout() {
     await this.authService.logout();
     await this.router.navigate(['/login']);
   }

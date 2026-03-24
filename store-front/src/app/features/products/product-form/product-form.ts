@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ProductService } from '../../../core/services/product/product.service';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Product } from '../../../core/models/product.model';
@@ -27,7 +27,6 @@ export class ProductForm {
   private readonly dialogRef = inject(MatDialogRef<ProductForm>);
   private readonly data = inject<{ product: Product | null }>(MAT_DIALOG_DATA);
 
-
   product = this.data.product;
   isLoading = signal(false);
   error = signal<string | null>(null);
@@ -36,7 +35,7 @@ export class ProductForm {
     name: new FormControl('', [Validators.required, Validators.minLength(2)]),
     description: new FormControl('', [Validators.required, Validators.minLength(2)]),
     price: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
-    stock: new FormControl<number | null>(null, [Validators.required, Validators.min(0)])
+    stock: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
   });
 
   ngOnInit() {
@@ -45,7 +44,7 @@ export class ProductForm {
         name: this.product.name,
         description: this.product.description,
         price: this.product.price,
-        stock: this.product.stock
+        stock: this.product.stock,
       });
     }
   }
@@ -58,19 +57,23 @@ export class ProductForm {
 
     try {
       if (this.product) {
-        await firstValueFrom(this.productService.update(this.product.id, {
-          name: this.form.value.name!,
-          description: this.form.value.description!,
-          price: this.form.value.price!,
-          stock: this.form.value.stock!
-        }));
+        await firstValueFrom(
+          this.productService.update(this.product.id, {
+            name: this.form.value.name!,
+            description: this.form.value.description!,
+            price: this.form.value.price!,
+            stock: this.form.value.stock!,
+          }),
+        );
       } else {
-        await firstValueFrom(this.productService.create({
-          name: this.form.value.name!,
-          description: this.form.value.description!,
-          price: this.form.value.price!,
-          stock: this.form.value.stock!
-        }));
+        await firstValueFrom(
+          this.productService.create({
+            name: this.form.value.name!,
+            description: this.form.value.description!,
+            price: this.form.value.price!,
+            stock: this.form.value.stock!,
+          }),
+        );
       }
 
       this.dialogRef.close(true);

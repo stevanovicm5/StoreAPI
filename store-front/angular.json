@@ -48,7 +48,7 @@
             },
             "development": {
               "define": {
-                "__API_BASE_URL__": "\"http://localhost:8080\""
+                "__API_BASE_URL__": "\"\""
               },
               "fileReplacements": [
                 {

@@ -1,8 +1,8 @@
-export interface UserInfo{
-    id: string;
-    name: string;
-    email: string;
-    role: string;
+export interface UserInfo {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
 }
 
 export interface AuthResponse {

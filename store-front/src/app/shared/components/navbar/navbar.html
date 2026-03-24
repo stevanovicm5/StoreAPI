@@ -6,14 +6,20 @@
   <div class="spacer"></div>
 
   <div class="nav-links">
-    <button mat-button class="nav-btn" routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">
+    <button
+      mat-button
+      class="nav-btn"
+      routerLink="/"
+      routerLinkActive="is-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       Products
     </button>
   </div>
 
   <div class="auth-area">
     @if (isAuthenticated()) {
-      @if (currentUser()?.role == 'ADMIN') {
+      @if (currentUser()?.role === 'ADMIN') {
         <button
           mat-icon-button
           class="settings-btn"
@@ -31,8 +37,12 @@
       </span>
       <button mat-flat-button class="logout-btn" (click)="onLogout()">Logout</button>
     } @else {
-      <button mat-button class="ghost-btn" routerLink="/login" routerLinkActive="is-active">Login</button>
-      <button mat-flat-button class="cta-btn" routerLink="/register" routerLinkActive="is-active">Register</button>
+      <button mat-button class="ghost-btn" routerLink="/login" routerLinkActive="is-active">
+        Login
+      </button>
+      <button mat-flat-button class="cta-btn" routerLink="/register" routerLinkActive="is-active">
+        Register
+      </button>
     }
   </div>
 </mat-toolbar>

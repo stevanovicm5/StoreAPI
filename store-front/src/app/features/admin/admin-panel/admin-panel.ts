@@ -5,7 +5,7 @@ import { Product } from '../../../core/models/product.model';
 import { firstValueFrom } from 'rxjs';
 import { ProductForm } from '../../products/product-form/product-form';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from "@angular/material/card";
+import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { CurrencyPipe } from '@angular/common';
@@ -19,8 +19,8 @@ import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm
     MatIconModule,
     MatCardModule,
     MatDialogModule,
-    CurrencyPipe
-],
+    CurrencyPipe,
+  ],
   templateUrl: './admin-panel.html',
   styleUrl: './admin-panel.css',
 })
@@ -38,10 +38,10 @@ export class AdminPanel {
 
   async loadProducts() {
     this.isLoading.set(true);
-    try{
+    try {
       const products = await firstValueFrom(this.productService.getAll());
       this.products.set(products);
-    }finally{
+    } finally {
       this.isLoading.set(false);
     }
   }
@@ -50,7 +50,7 @@ export class AdminPanel {
     const dialogRef = this.dialog.open(ProductForm, {
       width: '560px',
       maxWidth: '95vw',
-      data: { product: null }
+      data: { product: null },
     });
 
     const result = await firstValueFrom(dialogRef.afterClosed());
@@ -61,7 +61,7 @@ export class AdminPanel {
     const dialogRef = this.dialog.open(ProductForm, {
       width: '560px',
       maxWidth: '95vw',
-      data: { product }
+      data: { product },
     });
 
     const result = await firstValueFrom(dialogRef.afterClosed());
@@ -75,8 +75,8 @@ export class AdminPanel {
         title: 'Delete product',
         message: 'Are you sure you want to delete this product? This action cannot be undone.',
         confirmText: 'Delete',
-        cancelText: 'Cancel'
-      }
+        cancelText: 'Cancel',
+      },
     });
 
     const confirmed = await firstValueFrom(dialogRef.afterClosed());

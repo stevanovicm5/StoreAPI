@@ -6,7 +6,6 @@
 
     <mat-card-content>
       <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()">
-
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" />
@@ -44,10 +43,15 @@
           <p class="auth-error">{{ error() }}</p>
         }
 
-        <button class="auth-submit" mat-raised-button color="primary" type="submit" [disabled]="isLoading()">
+        <button
+          class="auth-submit"
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="isLoading()"
+        >
           {{ isLoading() ? 'Registering...' : 'Register' }}
         </button>
-
       </form>
     </mat-card-content>
 
