@@ -7,7 +7,7 @@ namespace StoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "ADMIN")]
+    // [Authorize(Roles = "ADMIN")]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;

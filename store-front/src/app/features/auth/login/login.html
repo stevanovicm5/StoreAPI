@@ -1,0 +1,46 @@
+<div class="auth-page">
+  <mat-card class="auth-card">
+    <mat-card-header class="auth-header">
+      <mat-card-title class="auth-title">Login</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" />
+          @if (form.controls.email.invalid && form.controls.email.touched) {
+            <mat-error>Valid email is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" />
+          @if (form.controls.password.invalid && form.controls.password.touched) {
+            <mat-error>Password must be at least 6 characters.</mat-error>
+          }
+        </mat-form-field>
+
+        @if (error()) {
+          <p class="auth-error">{{ error() }}</p>
+        }
+
+        <button
+          class="auth-submit"
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="isLoading()"
+        >
+          {{ isLoading() ? 'Logging in...' : 'Login' }}
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions class="auth-actions">
+      <span>Don't have an account?</span>
+      <a routerLink="/register">Register</a>
+    </mat-card-actions>
+  </mat-card>
+</div>
