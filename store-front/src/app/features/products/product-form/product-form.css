@@ -1,0 +1,52 @@
+.form-title {
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.form-content {
+  padding-top: 4px;
+}
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(520px, 100%);
+  max-width: 100%;
+  margin: 0 auto;
+  padding-top: 6px;
+}
+
+.product-form mat-form-field {
+  width: 100%;
+}
+
+.row-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-error {
+  margin: 2px 0 0;
+  font-size: 0.9rem;
+  color: #b3261e;
+}
+
+.save-spinner {
+  display: inline-block;
+}
+
+.form-actions {
+  padding-top: 8px;
+}
+
+@media (max-width: 700px) {
+  .product-form {
+    width: 100%;
+  }
+
+  .row-fields {
+    grid-template-columns: 1fr;
+  }
+}

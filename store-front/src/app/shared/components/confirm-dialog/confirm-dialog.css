@@ -1,0 +1,10 @@
+.confirm-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.confirm-message p {
+  margin: 0;
+  line-height: 1.4;
+}

@@ -45,6 +45,14 @@ services:
       db:
         condition: service_healthy
 
+  frontend:
+    container_name: store-frontend
+    build: 
+      context: ./store-front
+      dockerfile: Dockerfile
+    ports:
+      - "4300:80"
+
 volumes:
   postgres_data:
   
