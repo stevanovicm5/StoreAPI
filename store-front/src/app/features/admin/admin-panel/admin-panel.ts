@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProductService } from '../../../core/services/product/product.service';
 import { Product } from '../../../core/models/product.model';
 import { firstValueFrom } from 'rxjs';
@@ -18,6 +18,7 @@ import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm
     MatButtonModule,
     MatIconModule,
     MatCardModule,
+    MatDialogModule,
     CurrencyPipe
 ],
   templateUrl: './admin-panel.html',
