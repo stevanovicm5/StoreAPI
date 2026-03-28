@@ -69,7 +69,8 @@ export class AuthService {
   async logout(): Promise<void> {
     try {
       await firstValueFrom(this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }));
-    } catch {
+    } catch(error) {
+      console.error('Error occurred while logging out:', error);
     } finally {
       this.accessToken.set(null);
       this.currentUser.set(null);

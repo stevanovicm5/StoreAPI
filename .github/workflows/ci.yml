@@ -43,6 +43,10 @@ jobs:
         working-directory: store-front
         run: npm ci
 
+      - name: Lint
+        working-directory: store-front
+        run: npm run lint
+
       - name: Build
         working-directory: store-front
         run: npm run build
