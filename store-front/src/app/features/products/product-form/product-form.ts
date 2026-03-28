@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { ProductService } from '../../../core/services/product/product.service';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Product } from '../../../core/models/product.model';
@@ -22,7 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   templateUrl: './product-form.html',
   styleUrl: './product-form.css',
 })
-export class ProductForm {
+export class ProductForm implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly dialogRef = inject(MatDialogRef<ProductForm>);
   private readonly data = inject<{ product: Product | null }>(MAT_DIALOG_DATA);

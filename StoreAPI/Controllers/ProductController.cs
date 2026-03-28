@@ -33,6 +33,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create(CreateProductDto productDto)
         {
             var product = await _productService.CreateAsync(productDto);
@@ -40,6 +41,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _productService.DeleteAsync(id);
@@ -48,6 +50,7 @@ namespace StoreAPI.Controllers
         }
 
         [HttpPatch("{id}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(Guid id, UpdateProductDto productDto)
         {
             var product = await _productService.UpdateAsync(id, productDto);

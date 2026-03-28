@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProductService } from '../../../core/services/product/product.service';
 import { Product } from '../../../core/models/product.model';
@@ -24,7 +24,7 @@ import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm
   templateUrl: './admin-panel.html',
   styleUrl: './admin-panel.css',
 })
-export class AdminPanel {
+export class AdminPanel implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly dialog = inject(MatDialog);
   displayedColumns = ['name', 'description', 'price', 'stock', 'actions'];
