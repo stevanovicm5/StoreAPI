@@ -15,4 +15,8 @@ export const routes: Routes = [
       import('./features/admin/admin-panel/admin-panel').then((m) => m.AdminPanel),
     canActivate: [adminGuard],
   },
+  {
+    path: 'profile', loadComponent: () => 
+    import('./features/profile/profile/profile').then(m => m.Profile), 
+    canActivate: [authGuard]},
 ];

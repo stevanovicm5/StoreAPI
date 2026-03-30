@@ -8,7 +8,6 @@ namespace StoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "ADMIN")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -33,6 +32,7 @@ namespace StoreAPI.Controllers
             return Ok(user);
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserDto userDto)
         {
@@ -47,6 +47,7 @@ namespace StoreAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -55,6 +56,7 @@ namespace StoreAPI.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateUserDto updateUserDto)
         {
@@ -68,6 +70,13 @@ namespace StoreAPI.Controllers
             {
                 return Conflict(new { message = ex.Message });
             }
+        }
+
+        [HttpPatch("{id}/change-password")]
+        public async Task<IActionResult> ChangePassword(Guid id, ChangePasswordDto changePasswordDto)
+        {
+            await _userService.ChangePasswordAsync(id, changePasswordDto);
+            return NoContent();
         }
     }
 }

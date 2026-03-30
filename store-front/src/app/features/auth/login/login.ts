@@ -26,11 +26,45 @@ export class Login {
 
   error = signal<string | null>(null);
   isLoading = signal(false);
+  showPassword = signal(false);
 
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/[A-Z]/),
+      Validators.pattern(/[a-z]/),
+      Validators.pattern(/[0-9]/),
+      Validators.pattern(/[^a-zA-Z0-9]/),
+    ]),
   });
+
+  getPasswordError(): string {
+    const control = this.form.controls.password;
+    if (control.hasError('required')) return 'Password is required';
+    return 'Password must satisfy all requirements below';
+  }
+
+  hasMinLength(): boolean {
+    return (this.form.controls.password.value ?? '').length >= 8;
+  }
+
+  hasUppercase(): boolean {
+    return /[A-Z]/.test(this.form.controls.password.value ?? '');
+  }
+
+  hasLowercase(): boolean {
+    return /[a-z]/.test(this.form.controls.password.value ?? '');
+  }
+
+  hasNumber(): boolean {
+    return /[0-9]/.test(this.form.controls.password.value ?? '');
+  }
+
+  hasSpecialCharacter(): boolean {
+    return /[^a-zA-Z0-9]/.test(this.form.controls.password.value ?? '');
+  }
 
   async onSubmit() {
     if (this.form.invalid) return;

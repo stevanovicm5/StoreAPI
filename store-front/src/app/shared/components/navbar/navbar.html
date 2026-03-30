@@ -32,8 +32,19 @@
         </button>
       }
       <span class="user-chip" title="Signed in user">
-        <mat-icon class="user-chip-icon" aria-hidden="true">person</mat-icon>
-        <span class="user-chip-text">{{ currentUser()?.name }}</span>
+        <button
+          class="user-chip-btn"
+          routerLink="/profile"
+          routerLinkActive="is-active"
+          aria-label="Open profile"
+        >
+          <span class="user-chip-avatar-wrap" aria-hidden="true">
+            <span class="user-chip-avatar">{{ (currentUser()?.name || 'U').charAt(0).toUpperCase() }}</span>
+            <span class="user-chip-status"></span>
+          </span>
+          <span class="user-chip-text">{{currentUser()?.name}}</span>
+          <mat-icon class="user-chip-chevron" aria-hidden="true">expand_more</mat-icon>
+        </button>
       </span>
       <button mat-flat-button class="logout-btn" (click)="onLogout()">Logout</button>
     } @else {
