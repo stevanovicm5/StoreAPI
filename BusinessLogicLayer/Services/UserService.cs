@@ -20,6 +20,23 @@ public class UserService : IUserService
         _context = context;
     }
 
+    public async Task ChangePasswordAsync(Guid id, ChangePasswordDto dto)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        if (user is null)
+        {
+            throw new AppException("User not found.", 404);
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, user.PasswordHash))
+        {
+            throw new AppException("Current password is incorrect", 400);
+        }
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<UserDto> CreateAsync(CreateUserDto dto)
     {
         var normalizedEmail = dto.Email.Trim().ToLowerInvariant();

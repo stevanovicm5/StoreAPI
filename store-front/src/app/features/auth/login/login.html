@@ -16,11 +16,23 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
-          <input matInput formControlName="password" type="password" />
+          <input matInput formControlName="password" [type]="showPassword() ? 'text' : 'password'" />
+          <button mat-button matSuffix type="button" (click)="showPassword.set(!showPassword())">
+            {{ showPassword() ? 'Hide' : 'Show' }}
+          </button>
           @if (form.controls.password.invalid && form.controls.password.touched) {
-            <mat-error>Password must be at least 6 characters.</mat-error>
+            <mat-error>{{ getPasswordError() }}</mat-error>
           }
         </mat-form-field>
+
+        <div class="password-rules" [class.invalid]="form.controls.password.touched && form.controls.password.invalid">
+          <p class="rules-title">Password must include:</p>
+          <div class="rule" [class.valid]="hasMinLength()">8+ characters</div>
+          <div class="rule" [class.valid]="hasUppercase()">One uppercase letter</div>
+          <div class="rule" [class.valid]="hasLowercase()">One lowercase letter</div>
+          <div class="rule" [class.valid]="hasNumber()">One number</div>
+          <div class="rule" [class.valid]="hasSpecialCharacter()">One special character</div>
+        </div>
 
         @if (error()) {
           <p class="auth-error">{{ error() }}</p>

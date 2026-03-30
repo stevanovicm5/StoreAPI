@@ -9,35 +9,38 @@
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" />
-          @if (form.controls.name.hasError('required')) {
-            <mat-error>Name is required</mat-error>
-          }
-          @if (form.controls.name.hasError('minlength')) {
-            <mat-error>Name must be at least 2 characters</mat-error>
+          @if (form.controls.name.touched && form.controls.name.invalid) {
+            <mat-error>{{ getNameError() }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email" />
-          @if (form.controls.email.hasError('required')) {
-            <mat-error>Email is required</mat-error>
-          }
-          @if (form.controls.email.hasError('email')) {
-            <mat-error>Invalid email format</mat-error>
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <mat-error>{{ getEmailError() }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
-          <input matInput formControlName="password" type="password" />
-          @if (form.controls.password.hasError('required')) {
-            <mat-error>Password is required</mat-error>
-          }
-          @if (form.controls.password.hasError('minlength')) {
-            <mat-error>Password must be at least 6 characters</mat-error>
+          <input matInput formControlName="password" [type]="showPassword() ? 'text' : 'password'" />
+          <button mat-button matSuffix type="button" (click)="showPassword.set(!showPassword())">
+            {{ showPassword() ? 'Hide' : 'Show' }}
+          </button>
+          @if (form.controls.password.touched && form.controls.password.invalid) {
+            <mat-error>{{ getPasswordError() }}</mat-error>
           }
         </mat-form-field>
+
+        <div class="password-rules" [class.invalid]="form.controls.password.touched && form.controls.password.invalid">
+          <p class="rules-title">Password must include:</p>
+          <div class="rule" [class.valid]="hasMinLength()">8+ characters</div>
+          <div class="rule" [class.valid]="hasUppercase()">One uppercase letter</div>
+          <div class="rule" [class.valid]="hasLowercase()">One lowercase letter</div>
+          <div class="rule" [class.valid]="hasNumber()">One number</div>
+          <div class="rule" [class.valid]="hasSpecialCharacter()">One special character</div>
+        </div>
 
         @if (error()) {
           <p class="auth-error">{{ error() }}</p>
