@@ -1,1 +1,120 @@
-<p>profile works!</p>
+<div class="profile-container">
+  <mat-card class="profile-card">
+    <mat-card-content>
+      <section class="profile-hero" aria-label="Profile header">
+        <div class="profile-avatar" aria-hidden="true">
+          {{ (user()?.name || 'U').charAt(0).toUpperCase() }}
+        </div>
+        <div class="profile-heading">
+          <h2>My Profile</h2>
+          <p>Manage your account details and keep your credentials secure.</p>
+        </div>
+      </section>
+
+      <section class="profile-section" aria-label="Profile details">
+        <div class="section-head">
+          <h3>Account Details</h3>
+          <span>Visible information for your account</span>
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()" class="profile-form">
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" />
+              @if (profileForm.controls.name.hasError('required')) {
+                <mat-error>Name is required</mat-error>
+              }
+              @if (profileForm.controls.name.hasError('minlength')) {
+                <mat-error>Name must be at least 2 characters</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" type="email" />
+              @if (profileForm.controls.email.hasError('required')) {
+                <mat-error>Email is required</mat-error>
+              }
+              @if (profileForm.controls.email.hasError('email')) {
+                <mat-error>Invalid email format</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          @if (profileError()) {
+            <p class="message error-message">{{ profileError() }}</p>
+          }
+          @if (profileSuccess()) {
+            <p class="message success-message">{{ profileSuccess() }}</p>
+          }
+
+          <div class="actions-row">
+            <button mat-raised-button color="primary" type="submit" [disabled]="isLoadingProfile()">
+              {{ isLoadingProfile() ? 'Saving...' : 'Save Changes' }}
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <mat-divider></mat-divider>
+
+      <section class="profile-section" aria-label="Password settings">
+        <div class="section-head">
+          <h3>Security</h3>
+          <span>Change your password regularly to keep your account protected</span>
+        </div>
+
+        <form
+          [formGroup]="passwordForm"
+          #passwordFormDirective="ngForm"
+          (ngSubmit)="onChangePassword(passwordFormDirective)"
+          class="profile-form"
+        >
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Current Password</mat-label>
+              <input matInput formControlName="currentPassword" type="password" />
+              @if (passwordForm.controls.currentPassword.touched && passwordForm.controls.currentPassword.hasError('required')) {
+                <mat-error>Current password is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>New Password</mat-label>
+              <input matInput formControlName="newPassword" type="password" />
+              @if (passwordForm.controls.newPassword.touched && passwordForm.controls.newPassword.invalid) {
+                <mat-error>{{ getNewPasswordError() }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div
+            class="password-rules"
+            [class.invalid]="passwordForm.controls.newPassword.touched && passwordForm.controls.newPassword.invalid"
+          >
+            <p class="rules-title">Password must include:</p>
+            <div class="rule" [class.valid]="hasMinLength()">8+ characters</div>
+            <div class="rule" [class.valid]="hasUppercase()">One uppercase letter</div>
+            <div class="rule" [class.valid]="hasLowercase()">One lowercase letter</div>
+            <div class="rule" [class.valid]="hasNumber()">One number</div>
+            <div class="rule" [class.valid]="hasSpecialCharacter()">One special character</div>
+          </div>
+
+          @if (passwordError()) {
+            <p class="message error-message">{{ passwordError() }}</p>
+          }
+          @if (passwordSuccess()) {
+            <p class="message success-message">{{ passwordSuccess() }}</p>
+          }
+
+          <div class="actions-row">
+            <button mat-raised-button color="accent" type="submit" [disabled]="isLoadingPassword()">
+              {{ isLoadingPassword() ? 'Changing...' : 'Update Password' }}
+            </button>
+          </div>
+        </form>
+      </section>
+    </mat-card-content>
+  </mat-card>
+</div>
